@@ -4,12 +4,14 @@ using MachineSightApp.Models;
 
 namespace MachineSightApp.Interfaces;
 
+public enum ConnectionStatus { Connecting, Connected, Retrying, Disconnected }
+
 public interface IOpcUaService
 {
     event Action<MachineData>? DataReceived;
+    event Action<ConnectionStatus>? ConnectionStatusChanged;
     Task ConnectAsync(string url);
-    Task StartPollingAsync();
     Task DisconnectAsync();
+    Task StartPollingAsync();
     Task WriteCommandAsync(uint nodeId, bool value);
-    void SetUrl(string url);
 }

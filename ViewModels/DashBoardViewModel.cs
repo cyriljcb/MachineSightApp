@@ -56,13 +56,17 @@ public partial class DashBoardViewModel : ViewModelBase
     [ObservableProperty] private bool     _alarmEmergency;
     [ObservableProperty] private DateTime _timestamp;
 
+    [ObservableProperty] private string  _connectionLabel = "Connexion...";
+    [ObservableProperty] private string  _connectionColor = "Gray";
+    [ObservableProperty] private bool    _isConnected     = false;
+
     private readonly IOpcUaService _client;
 
     public DashBoardViewModel(IOpcUaService opcUaService)
     {
         _client = opcUaService;
         _client.DataReceived += OnDataReceived;
-
+        _client.ConnectionStatusChanged += OnConnectionStatusChanged;
         for (int i = 0; i < 60; i++)
         {
             _tempHistory.Enqueue(0);
@@ -146,4 +150,19 @@ public partial class DashBoardViewModel : ViewModelBase
     [RelayCommand] private async Task EmergencyMachine() => await _client.WriteCommandAsync(1033, true);
     [RelayCommand] private async Task ResetMachine()     => await _client.WriteCommandAsync(1034, true);
     [RelayCommand] private async Task InjectData()       => await _client.WriteCommandAsync(1035, true);
+
+    private void OnConnectionStatusChanged(ConnectionStatus status)
+    {
+        Dispatcher.UIThread.InvokeAsync(() =>
+        {
+            (ConnectionLabel, ConnectionColor, IsConnected) = status switch
+            {
+                ConnectionStatus.Connected    => ("En marche",          "Green",  true),
+                ConnectionStatus.Connecting   => ("Connexion...",       "Gray",   false),
+                ConnectionStatus.Retrying     => ("Reconnexion...",     "Orange", false),
+                ConnectionStatus.Disconnected => ("Problème connexion", "Red",    false),
+                _                             => ("Inconnu",            "Gray",   false)
+            };
+        });
+    }
 }

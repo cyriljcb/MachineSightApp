@@ -18,11 +18,13 @@ public class OpcUaService : IOpcUaService
     private string? _lastUrl;
     public event Action<MachineData>? DataReceived;
     private CancellationTokenSource _cts = new();
+    public event Action<ConnectionStatus>? ConnectionStatusChanged;
 
     // ── Polly policies ──────────────────────────────────────────────────────
     private readonly AsyncRetryPolicy _retryPolicy;
     private readonly AsyncCircuitBreakerPolicy _circuitBreakerPolicy;
     private readonly AsyncPolicyWrap _policy;
+
 
     public OpcUaService()
     {
@@ -30,11 +32,12 @@ public class OpcUaService : IOpcUaService
             .Handle<Exception>(ex => ex is not OperationCanceledException)
             .WaitAndRetryAsync(
                 retryCount: 5,
-                sleepDurationProvider: attempt =>
-                    TimeSpan.FromSeconds(Math.Pow(2, attempt)), // 2s, 4s, 8s, 16s, 32s
+                sleepDurationProvider: attempt => TimeSpan.FromSeconds(Math.Pow(2, attempt)),
                 onRetry: (exception, delay, attempt, _) =>
-                    Console.WriteLine(
-                        $"[Polly] Retry {attempt}/5 dans {delay.TotalSeconds:F0}s — {exception.Message}"));
+                {
+                    Console.WriteLine($"[Polly] Retry {attempt}/5 dans {delay.TotalSeconds:F0}s — {exception.Message}");
+                    SetStatus(ConnectionStatus.Retrying);  // ← ajouter
+                });
 
         _circuitBreakerPolicy = Policy
             .Handle<Exception>(ex => ex is not OperationCanceledException)
@@ -42,12 +45,20 @@ public class OpcUaService : IOpcUaService
                 exceptionsAllowedBeforeBreaking: 3,
                 durationOfBreak: TimeSpan.FromSeconds(20),
                 onBreak: (ex, duration) =>
-                    Console.WriteLine(
-                        $"[Polly] Circuit OUVERT — serveur OPC UA indisponible, pause {duration.TotalSeconds}s"),
+                {
+                    Console.WriteLine($"[Polly] Circuit OUVERT — pause {duration.TotalSeconds}s");
+                    SetStatus(ConnectionStatus.Disconnected);  // ← ajouter
+                },
                 onReset: () =>
-                    Console.WriteLine("[Polly] Circuit FERMÉ — connexion OPC UA rétablie"),
+                {
+                    Console.WriteLine("[Polly] Circuit FERMÉ — connexion rétablie");
+                    SetStatus(ConnectionStatus.Connected);  // ← ajouter
+                },
                 onHalfOpen: () =>
-                    Console.WriteLine("[Polly] Circuit SEMI-OUVERT — tentative de reconnexion..."));
+                {
+                    Console.WriteLine("[Polly] Circuit SEMI-OUVERT — test reconnexion...");
+                    SetStatus(ConnectionStatus.Retrying);  // ← ajouter
+                });
 
         // Circuit breaker en outer, retry en inner
         _policy = _circuitBreakerPolicy.WrapAsync(_retryPolicy);
@@ -167,6 +178,7 @@ public class OpcUaService : IOpcUaService
     public async Task StartPollingAsync()
     {
         CancellationToken token = _cts.Token;
+        SetStatus(ConnectionStatus.Connecting);
 
         while (!token.IsCancellationRequested)
         {
@@ -208,7 +220,7 @@ public class OpcUaService : IOpcUaService
                         throw;
                     }
                 });
-
+                SetStatus(ConnectionStatus.Connected);
                 DataReceived?.Invoke(data);
             }
             catch (BrokenCircuitException)
@@ -251,4 +263,10 @@ public class OpcUaService : IOpcUaService
         });
     }
     public void SetUrl(string url) => _lastUrl = url;
+
+    private void SetStatus(ConnectionStatus status)
+    {
+        Console.WriteLine($"[OPC UA] Status → {status}");
+        ConnectionStatusChanged?.Invoke(status);
+    }
 }

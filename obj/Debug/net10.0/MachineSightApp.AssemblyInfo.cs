@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("MachineSightApp")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d0aa4a14849419c1f4637f1c4c33a46c320ce54c")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a1db9d30a693014fde30b6d7c4deca7a6d6a9afe")]
 [assembly: System.Reflection.AssemblyProductAttribute("MachineSightApp")]
 [assembly: System.Reflection.AssemblyTitleAttribute("MachineSightApp")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
