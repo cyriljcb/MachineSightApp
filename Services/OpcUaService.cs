@@ -36,7 +36,7 @@ public class OpcUaService : IOpcUaService
                 onRetry: (exception, delay, attempt, _) =>
                 {
                     Console.WriteLine($"[Polly] Retry {attempt}/5 dans {delay.TotalSeconds:F0}s — {exception.Message}");
-                    SetStatus(ConnectionStatus.Retrying);  // ← ajouter
+                    SetStatus(ConnectionStatus.Retrying);
                 });
 
         _circuitBreakerPolicy = Policy
@@ -47,17 +47,17 @@ public class OpcUaService : IOpcUaService
                 onBreak: (ex, duration) =>
                 {
                     Console.WriteLine($"[Polly] Circuit OUVERT — pause {duration.TotalSeconds}s");
-                    SetStatus(ConnectionStatus.Disconnected);  // ← ajouter
+                    SetStatus(ConnectionStatus.Disconnected);
                 },
                 onReset: () =>
                 {
                     Console.WriteLine("[Polly] Circuit FERMÉ — connexion rétablie");
-                    SetStatus(ConnectionStatus.Connected);  // ← ajouter
+                    SetStatus(ConnectionStatus.Connected); 
                 },
                 onHalfOpen: () =>
                 {
                     Console.WriteLine("[Polly] Circuit SEMI-OUVERT — test reconnexion...");
-                    SetStatus(ConnectionStatus.Retrying);  // ← ajouter
+                    SetStatus(ConnectionStatus.Retrying);  
                 });
 
         // Circuit breaker en outer, retry en inner
