@@ -1,0 +1,6 @@
+# .gitignore
+pki/
+*.pem
+*.crt
+*.key
+*.pfx

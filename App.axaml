@@ -1,0 +1,27 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="MachineSightApp.App"
+             xmlns:local="using:MachineSightApp"
+             xmlns:converters="using:MachineSightApp.Converters"
+             xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
+             RequestedThemeVariant="Default">
+             <!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
+
+    <Application.DataTemplates>
+        <local:ViewLocator/>
+    </Application.DataTemplates>
+  
+    <Application.Styles>
+        <FluentTheme />
+    </Application.Styles>
+
+    <Application.Resources>
+        <ResourceDictionary>
+            <converters:BoolToColorConverter x:Key="BoolToColorConverter"/>
+            <converters:StateToColorConverter x:Key="StateToColorConverter"/>
+            <SolidColorBrush x:Key="BgPrimary" Color="#0d1117"/>
+            <SolidColorBrush x:Key="BgSecondary" Color="#161b22"/>
+            <SolidColorBrush x:Key="BgBorder" Color="#21262D"/>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

@@ -1,0 +1,219 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:MachineSightApp.ViewModels"
+             xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="MachineSightApp.Views.DashBoardView"
+             x:DataType="vm:DashBoardViewModel"
+             Background="{StaticResource BgPrimary}"
+             Foreground="White">
+
+            <DockPanel Margin="5">
+                  <DockPanel DockPanel.Dock="Top" Margin="20" LastChildFill="True" Background="{StaticResource BgSecondary}" >
+                    <Grid HorizontalAlignment="Stretch"  ShowGridLines="True" >
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>    
+                         <StackPanel Orientation="Horizontal" Grid.Column="0">
+                            <TextBlock Text="MACHINESIGHT" Foreground="LightBlue" Margin="10" ></TextBlock>
+                            <TextBlock Text="UNIT-01 . LIGNE-A" Background="black" Foreground="Gray" Margin="10"></TextBlock>
+                            <Border BorderBrush="Green" CornerRadius="10" BorderThickness="1" Background="DarkGreen">
+                                <TextBlock Text="EN MARCHE"  Foreground="LightGreen" Margin="10"></TextBlock>
+                            </Border>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Grid.Column="1" HorizontalAlignment="Right">
+                            <TextBlock Text="OPC UA . 192.168.129.166" Margin="10"></TextBlock>
+                            <TextBlock Text="{Binding Timestamp}" Margin="10"></TextBlock>
+                        </StackPanel>
+                    </Grid >
+                                                   
+                    </DockPanel>
+
+                <Grid ShowGridLines="True">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="4*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>    
+                    <StackPanel Grid.Column="0" >
+                        <StackPanel>
+                            <TextBlock Text="CAPTEURS"></TextBlock> 
+                            
+                            <StackPanel Orientation="Horizontal" Margin="10">
+                                <StackPanel>
+                                    <TextBlock Text="Température"></TextBlock>
+                                    <ProgressBar Value="{Binding Temperature.Value}" Maximum="{Binding Temperature.Maximum}" Background="AliceBlue" Foreground="{Binding Temperature.State, Converter={StaticResource StateToColorConverter}}"></ProgressBar>
+                                </StackPanel>
+                                <TextBlock Text="{Binding Temperature.Value, StringFormat={}{0:0}°C}" TextAlignment="Right"></TextBlock>
+                            </StackPanel>
+                            
+                            <StackPanel Orientation="Horizontal" Margin="10">
+                                <StackPanel>
+                                    <TextBlock Text="Pression"></TextBlock>
+                                    <ProgressBar Value="{Binding Pression.Value}" Maximum="7" Background="AliceBlue" Foreground="{Binding Pression.State, Converter={StaticResource StateToColorConverter}}"></ProgressBar>
+                                </StackPanel>
+                                <TextBlock Text="{Binding Pression.Value, StringFormat={}{0:0}Bar}" TextAlignment="Right"></TextBlock>
+                            </StackPanel>
+
+                            <StackPanel Orientation="Horizontal" Margin="10">
+                                <StackPanel>
+                                    <TextBlock Text="Vitesse"></TextBlock>
+                                    <ProgressBar Value="{Binding Vitesse.Value}" Maximum="2000" Background="AliceBlue" Foreground="{Binding Vitesse.State, Converter={StaticResource StateToColorConverter}}"></ProgressBar>
+                                </StackPanel>
+                                <TextBlock Text="{Binding Vitesse.Value, StringFormat={}{0:0}Rpm}" TextAlignment="Right"></TextBlock>
+                            </StackPanel>
+
+                            <StackPanel Orientation="Horizontal" Margin="10">
+                                <StackPanel>
+                                    <TextBlock Text="Vibration"></TextBlock>
+                                    <ProgressBar Value="{Binding Vibration.Value}" Maximum="12" Background="AliceBlue" Foreground="{Binding Vibration.State, Converter={StaticResource StateToColorConverter}}"></ProgressBar>
+                                </StackPanel>
+                                <TextBlock Text="{Binding Vibration.Value, StringFormat={}{0:0}mm/s}" TextAlignment="Right"></TextBlock>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="10">
+                                <StackPanel>
+                                    <TextBlock Text="Courant"></TextBlock>
+                                    <ProgressBar Value="{Binding Courant.Value}" Maximum="20" Background="AliceBlue" Foreground="{Binding Courant.State, Converter={StaticResource StateToColorConverter}}"></ProgressBar>
+                                </StackPanel>
+                                <TextBlock Text="{Binding Courant.Value, StringFormat={}{0:0}A}" TextAlignment="Right"></TextBlock>
+                            </StackPanel>
+                        </StackPanel>
+
+                    </StackPanel>
+                    <StackPanel Grid.Column="1">
+                            <Grid ShowGridLines="True">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"></RowDefinition>
+                                    <RowDefinition Height="3*"></RowDefinition>    
+                                </Grid.RowDefinitions>
+                                <Grid Grid.Row="0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"></ColumnDefinition>
+                                        <ColumnDefinition Width="*"></ColumnDefinition>
+                                        <ColumnDefinition Width="*"></ColumnDefinition>
+                                        <ColumnDefinition Width="*"></ColumnDefinition>
+                                    </Grid.ColumnDefinitions>
+                                
+                                    <StackPanel Orientation="Vertical" Margin="10" Grid.Column="0">
+                                        <Border BorderThickness="1" Background="{StaticResource BgSecondary}" BorderBrush="{StaticResource BgBorder}" CornerRadius="4" Padding="10">
+                                            <StackPanel>
+                                                <TextBlock Text="DISPONIBILITÉ"></TextBlock>
+                                                <TextBlock Text="96.4 %" Foreground="Green"></TextBlock>
+                                                <TextBlock Text="↑ +1.2% vs hier"></TextBlock>
+                                            </StackPanel>
+                                        </Border>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Vertical" Margin="10" Grid.Column="1">
+                                        <Border BorderThickness="1" Background="{StaticResource BgSecondary}" BorderBrush="{StaticResource BgBorder}" CornerRadius="4" Padding="10">
+                                            <StackPanel>
+                                                <TextBlock Text="PERFORMANCE"></TextBlock>
+                                                <TextBlock Text="81.0 %" Foreground="Yellow"></TextBlock>
+                                                <TextBlock Text="↓ −3.1% vs hier"></TextBlock>
+                                            </StackPanel>
+                                        </Border>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Vertical" Margin="10" Grid.Column="2">
+                                        <Border BorderThickness="1" Background="{StaticResource BgSecondary}" BorderBrush="{StaticResource BgBorder}" CornerRadius="4" Padding="10">
+                                            <StackPanel>
+                                                <TextBlock Text="QUALITÉ"></TextBlock>
+                                                <TextBlock Text="99.1 %" Foreground="Green"></TextBlock>
+                                                <TextBlock Text="→ stable"></TextBlock>
+                                            </StackPanel>
+                                        </Border>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Vertical" Margin="10" Grid.Column="3">
+                                        <Border BorderThickness="1" Background="{StaticResource BgSecondary}" BorderBrush="{StaticResource BgBorder}" CornerRadius="4" Padding="10">
+                                            <StackPanel>
+                                                <TextBlock Text="TRS"></TextBlock>
+                                                <TextBlock Text="77.6 %" Foreground="Yellow"></TextBlock>
+                                                <TextBlock Text="Objectif : 85%"></TextBlock>
+                                            </StackPanel>
+                                        </Border>
+                                    </StackPanel>
+                                </Grid> 
+                                <Grid Grid.Row="1">
+                                    <DockPanel>
+                                      <StackPanel DockPanel.Dock="Top" Margin="20">
+                                          <TextBlock Text="TENDANCE TEMPÉRATURE - 60 DERNIÈRES SECONDES"/>
+                                          <Canvas Height="100" ClipToBounds="True"
+                                                  SizeChanged="OnTempCanvasSizeChanged">
+                                              <Polyline
+                                                  Points="{Binding TempThresholdLine}"
+                                                  Stroke="Red" StrokeThickness="1"
+                                                  StrokeDashArray="4,4"
+                                                  Fill="Transparent"/>
+                                              <Polyline
+                                                  Points="{Binding TemperaturePoints}"
+                                                  Stroke="OrangeRed" StrokeThickness="1.5"
+                                                  Fill="Transparent"/>
+                                          </Canvas>
+                                          <TextBlock Text="— seuil alarme 95 °C" TextAlignment="Center"/>
+                                      </StackPanel>
+
+                                      <StackPanel DockPanel.Dock="Bottom" Margin="20">
+                                          <TextBlock Text="TENDANCE VIBRATION - 60 DERNIÈRES SECONDES"/>
+                                          <Canvas Height="100" ClipToBounds="True"
+                                                  SizeChanged="OnVibCanvasSizeChanged">
+                                              <Polyline
+                                                  Points="{Binding VibrationThresholdLine}"
+                                                  Stroke="Red" StrokeThickness="1"
+                                                  StrokeDashArray="4,4"
+                                                  Fill="Transparent"/>
+                                              <Polyline
+                                                  Points="{Binding VibrationPoints}"
+                                                  Stroke="CornflowerBlue" StrokeThickness="1.5"
+                                                  Fill="Transparent"/>
+                                          </Canvas>
+                                          <TextBlock Text="— seuil alarme 10 mm/s" TextAlignment="Center"/>
+                                      </StackPanel>
+                                  </DockPanel>
+                                       
+                                </Grid>
+                               
+                            </Grid>    
+                    </StackPanel>
+                    <Grid Grid.Column="2" Margin="10">
+                        <Grid ShowGridLines="True">
+                            <Grid.RowDefinitions>
+                                    <RowDefinition Height="3*"></RowDefinition>
+                                    <RowDefinition Height="2*"></RowDefinition>
+                                </Grid.RowDefinitions>    
+                                <StackPanel>
+                                        <TextBlock Text="ALARMES ACTIVES" ></TextBlock>
+
+                                        <Border BorderThickness="3,0,0,0" BorderBrush="Red" Background="#290404" Margin="10" CornerRadius="2">
+                                            <StackPanel Margin="10" >
+                                                <TextBlock Text="Vibration critique" Foreground="IndianRed"></TextBlock>
+                                                <TextBlock Text="10:42:15 . ACTIF" Foreground="IndianRed"></TextBlock>
+                                            </StackPanel>
+                                        </Border>
+                                        <Border BorderThickness="3,0,0,0" BorderBrush="Yellow" Background="#585810" Margin="10" CornerRadius="2">
+                                            <StackPanel Margin="10" >
+                                                <TextBlock Text="Température élevée" Foreground="Yellow"></TextBlock>
+                                                <TextBlock Text="10:38:12 . ACTIF" Foreground="Yellow"></TextBlock>
+                                            </StackPanel>
+                                        </Border>
+                                </StackPanel>
+
+                                <Grid Grid.Row="1">
+                                     <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/> 
+                                        <RowDefinition Height="*"/>
+                                        <RowDefinition Height="*"/>
+                                        <RowDefinition Height="*"/>
+                                        <RowDefinition Height="*"/>
+                                    </Grid.RowDefinitions>
+                                    <TextBlock Text="COMMANDES"></TextBlock>
+                                    <Button Content="DÉMARRER" Command="{Binding StartMachineCommand}" Grid.Row="1" BorderThickness="1" BorderBrush="GreenYellow" Background="Green" Margin="10" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"></Button>
+                                    <Button Content="ARRÉTER"  Command="{Binding StopMachineCommand}" Grid.Row="2" BorderThickness="1" BorderBrush="Red" Background="#290404" Margin="10" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"></Button>
+                                    <Button Content="RESET ALARMES" Command="{Binding ResetMachineCommand}" Grid.Row="3" BorderThickness="1" BorderBrush="{StaticResource BgSecondary}" Background="{StaticResource BgBorder}" Margin="10" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" ></Button>
+                                    <Button Content="INJECTER DÉFAUT" Command="{Binding InjectDataCommand}" Grid.Row="4" BorderThickness="1" BorderBrush="Orange" Background="#724B03" Margin="10" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"></Button>
+                                </Grid>
+                            </Grid> 
+                    </Grid >
+                </Grid>
+            </DockPanel>
+</UserControl>
