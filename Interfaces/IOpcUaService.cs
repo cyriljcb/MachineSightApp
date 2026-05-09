@@ -10,6 +10,7 @@ public interface IOpcUaService
 {
     event Action<MachineData>? DataReceived;
     event Action<ConnectionStatus>? ConnectionStatusChanged;
+    void SetUrl(string url);
     Task ConnectAsync(string url);
     Task DisconnectAsync();
     Task StartPollingAsync();
