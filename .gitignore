@@ -4,3 +4,5 @@ pki/
 *.crt
 *.key
 *.pfx
+bin/
+obj/
