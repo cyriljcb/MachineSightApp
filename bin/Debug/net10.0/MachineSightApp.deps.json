@@ -17,6 +17,8 @@
           "LiveChartsCore.SkiaSharpView.Avalonia": "2.0.0-rc4.5",
           "Microsoft.Extensions.DependencyInjection": "10.0.7",
           "OPCFoundation.NetStandard.Opc.Ua": "1.5.378.134",
+          "Polly": "8.6.6",
+          "Polly.Extensions.Http": "3.0.0",
           "AvaloniaUI.DiagnosticsSupport.Avalonia": "2.2.1.0"
         },
         "runtime": {
@@ -534,6 +536,36 @@
           }
         }
       },
+      "Polly/8.6.6": {
+        "dependencies": {
+          "Polly.Core": "8.6.6"
+        },
+        "runtime": {
+          "lib/net6.0/Polly.dll": {
+            "assemblyVersion": "8.0.0.0",
+            "fileVersion": "8.6.6.5454"
+          }
+        }
+      },
+      "Polly.Core/8.6.6": {
+        "runtime": {
+          "lib/net8.0/Polly.Core.dll": {
+            "assemblyVersion": "8.0.0.0",
+            "fileVersion": "8.6.6.5454"
+          }
+        }
+      },
+      "Polly.Extensions.Http/3.0.0": {
+        "dependencies": {
+          "Polly": "8.6.6"
+        },
+        "runtime": {
+          "lib/netstandard2.0/Polly.Extensions.Http.dll": {
+            "assemblyVersion": "3.0.0.0",
+            "fileVersion": "3.0.0.0"
+          }
+        }
+      },
       "SkiaSharp/2.88.8": {
         "dependencies": {
           "SkiaSharp.NativeAssets.Win32": "2.88.8",
@@ -909,6 +941,27 @@
       "sha512": "sha512-UYwgU4bvh2/Fy+cbtCvbQqqNFElTvAolRX8faj9JhceMWPXvbwEIF9R1VQI2MKFPkrfXM/ZbGegEanVaj9NkLQ==",
       "path": "opcfoundation.netstandard.opc.ua.types/1.5.378.134",
       "hashPath": "opcfoundation.netstandard.opc.ua.types.1.5.378.134.nupkg.sha512"
+    },
+    "Polly/8.6.6": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-czKHYJ6uGowPijuZt4kgF4njfGvWxVZ8mKBcrZ9iEtwDe9HKdF0ug6p6TwUG8EHuuufgbDU//rSBFebt5/0Fyw==",
+      "path": "polly/8.6.6",
+      "hashPath": "polly.8.6.6.nupkg.sha512"
+    },
+    "Polly.Core/8.6.6": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-lCBL9mmhF9TZxHG3beVRkyjlLohkIC464xIAq7J7Y59C+z42hmsdUaeCKl2SIAYertOUU5TeBXyQDLDQGIKePQ==",
+      "path": "polly.core/8.6.6",
+      "hashPath": "polly.core.8.6.6.nupkg.sha512"
+    },
+    "Polly.Extensions.Http/3.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-drrG+hB3pYFY7w1c3BD+lSGYvH2oIclH8GRSehgfyP5kjnFnHKQuuBhuHLv+PWyFuaTDyk/vfRpnxOzd11+J8g==",
+      "path": "polly.extensions.http/3.0.0",
+      "hashPath": "polly.extensions.http.3.0.0.nupkg.sha512"
     },
     "SkiaSharp/2.88.8": {
       "type": "package",

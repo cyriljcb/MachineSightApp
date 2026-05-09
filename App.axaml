@@ -19,6 +19,7 @@
         <ResourceDictionary>
             <converters:BoolToColorConverter x:Key="BoolToColorConverter"/>
             <converters:StateToColorConverter x:Key="StateToColorConverter"/>
+            <converters:BoolToOpacityConverter x:Key="BoolToOpacityConverter"/>
             <SolidColorBrush x:Key="BgPrimary" Color="#0d1117"/>
             <SolidColorBrush x:Key="BgSecondary" Color="#161b22"/>
             <SolidColorBrush x:Key="BgBorder" Color="#21262D"/>

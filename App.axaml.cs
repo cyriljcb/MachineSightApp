@@ -35,7 +35,7 @@ public partial class App : Application
             {
                 try
                 {
-                    await opcUaService.ConnectAsync("opc.tcp://192.168.129.166:4840/machinesight/simulator/");
+                    opcUaService.SetUrl("opc.tcp://192.168.129.166:4840/machinesight/simulator/");
                     await opcUaService.StartPollingAsync();
                 }
                 catch (Exception ex)

@@ -25,5 +25,7 @@
     <PackageReference Include="LiveChartsCore.SkiaSharpView.Avalonia" Version="2.0.0-rc4.5" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.7" />
     <PackageReference Include="OPCFoundation.NetStandard.Opc.Ua" Version="1.5.378.134" />
+    <PackageReference Include="Polly" Version="8.6.6" />
+    <PackageReference Include="Polly.Extensions.Http" Version="3.0.0" />
   </ItemGroup>
 </Project>
