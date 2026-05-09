@@ -11,4 +11,5 @@ public interface IOpcUaService
     Task StartPollingAsync();
     Task DisconnectAsync();
     Task WriteCommandAsync(uint nodeId, bool value);
+    void SetUrl(string url);
 }

@@ -147,7 +147,7 @@
                                                   Fill="Transparent"/>
                                               <Polyline
                                                   Points="{Binding TemperaturePoints}"
-                                                  Stroke="OrangeRed" StrokeThickness="1.5"
+                                                  Stroke="CornFlowerBlue" StrokeThickness="1.5"
                                                   Fill="Transparent"/>
                                           </Canvas>
                                           <TextBlock Text="— seuil alarme 95 °C" TextAlignment="Center"/>

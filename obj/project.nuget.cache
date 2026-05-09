@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "RZ0ug1x/UOE=",
+  "dgSpecHash": "9rTytcPIYIg=",
   "success": true,
   "projectFilePath": "C:\\Users\\ateli\\OneDrive\\Documents\\ProjetDev\\MachineSight\\MachineSightApp\\MachineSightApp.csproj",
   "expectedPackageFiles": [
@@ -45,6 +45,9 @@
     "C:\\Users\\ateli\\.nuget\\packages\\opcfoundation.netstandard.opc.ua.security.certificates\\1.5.378.134\\opcfoundation.netstandard.opc.ua.security.certificates.1.5.378.134.nupkg.sha512",
     "C:\\Users\\ateli\\.nuget\\packages\\opcfoundation.netstandard.opc.ua.server\\1.5.378.134\\opcfoundation.netstandard.opc.ua.server.1.5.378.134.nupkg.sha512",
     "C:\\Users\\ateli\\.nuget\\packages\\opcfoundation.netstandard.opc.ua.types\\1.5.378.134\\opcfoundation.netstandard.opc.ua.types.1.5.378.134.nupkg.sha512",
+    "C:\\Users\\ateli\\.nuget\\packages\\polly\\8.6.6\\polly.8.6.6.nupkg.sha512",
+    "C:\\Users\\ateli\\.nuget\\packages\\polly.core\\8.6.6\\polly.core.8.6.6.nupkg.sha512",
+    "C:\\Users\\ateli\\.nuget\\packages\\polly.extensions.http\\3.0.0\\polly.extensions.http.3.0.0.nupkg.sha512",
     "C:\\Users\\ateli\\.nuget\\packages\\skiasharp\\2.88.8\\skiasharp.2.88.8.nupkg.sha512",
     "C:\\Users\\ateli\\.nuget\\packages\\skiasharp.harfbuzz\\2.88.8\\skiasharp.harfbuzz.2.88.8.nupkg.sha512",
     "C:\\Users\\ateli\\.nuget\\packages\\skiasharp.nativeassets.linux\\2.88.8\\skiasharp.nativeassets.linux.2.88.8.nupkg.sha512",

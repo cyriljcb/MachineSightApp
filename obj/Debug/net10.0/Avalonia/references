@@ -49,6 +49,9 @@ C:\Users\ateli\.nuget\packages\opcfoundation.netstandard.opc.ua.gds.server.commo
 C:\Users\ateli\.nuget\packages\opcfoundation.netstandard.opc.ua.security.certificates\1.5.378.134\lib\net10.0\Opc.Ua.Security.Certificates.dll
 C:\Users\ateli\.nuget\packages\opcfoundation.netstandard.opc.ua.server\1.5.378.134\lib\net10.0\Opc.Ua.Server.dll
 C:\Users\ateli\.nuget\packages\opcfoundation.netstandard.opc.ua.types\1.5.378.134\lib\net10.0\Opc.Ua.Types.dll
+C:\Users\ateli\.nuget\packages\polly.core\8.6.6\lib\net8.0\Polly.Core.dll
+C:\Users\ateli\.nuget\packages\polly\8.6.6\lib\net6.0\Polly.dll
+C:\Users\ateli\.nuget\packages\polly.extensions.http\3.0.0\lib\netstandard2.0\Polly.Extensions.Http.dll
 C:\Users\ateli\.nuget\packages\skiasharp\2.88.8\lib\net6.0\SkiaSharp.dll
 C:\Users\ateli\.nuget\packages\skiasharp.harfbuzz\2.88.8\lib\net6.0\SkiaSharp.HarfBuzz.dll
 C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\10.0.7\ref\net10.0\System.AppContext.dll

@@ -169,3 +169,6 @@ C:\Users\ateli\OneDrive\Documents\ProjetDev\MachineSight\MachineSightApp\obj\Deb
 C:\Users\ateli\OneDrive\Documents\ProjetDev\MachineSight\MachineSightApp\obj\Debug\net10.0\MachineS.0DE1BCB0.Up2Date
 C:\Users\ateli\OneDrive\Documents\ProjetDev\MachineSight\MachineSightApp\obj\Debug\net10.0\MachineSightApp.genruntimeconfig.cache
 C:\Users\ateli\OneDrive\Documents\ProjetDev\MachineSight\MachineSightApp\obj\Debug\net10.0\ref\MachineSightApp.dll
+C:\Users\ateli\OneDrive\Documents\ProjetDev\MachineSight\MachineSightApp\bin\Debug\net10.0\Polly.dll
+C:\Users\ateli\OneDrive\Documents\ProjetDev\MachineSight\MachineSightApp\bin\Debug\net10.0\Polly.Core.dll
+C:\Users\ateli\OneDrive\Documents\ProjetDev\MachineSight\MachineSightApp\bin\Debug\net10.0\Polly.Extensions.Http.dll

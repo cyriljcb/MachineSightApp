@@ -19,12 +19,19 @@ public partial class CameraViewModel : ViewModelBase
         _cameraService = cameraService;
         _cameraService.FrameReceived += onFrameReceived;
     }
-    private void onFrameReceived(byte[] FrameReceived)
+    private void onFrameReceived(byte[] frameData)
     {
         Dispatcher.UIThread.InvokeAsync(() =>
         {
-            using var ms = new MemoryStream(FrameReceived);
-            CurrentFrame = new Bitmap(ms);
-        }); 
+            try
+            {
+                using var ms = new MemoryStream(frameData);
+                CurrentFrame = new Bitmap(ms);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[CAM VM] Erreur bitmap: {ex.Message}");
+            }
+        });
     }
 }

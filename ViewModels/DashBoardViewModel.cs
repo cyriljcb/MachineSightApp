@@ -141,9 +141,9 @@ public partial class DashBoardViewModel : ViewModelBase
     private static double ThresholdY(double threshold, double maxValue) =>
         CanvasHeight - (threshold / maxValue * CanvasHeight);
 
-    [RelayCommand] private async Task StartMachine()     => await _client.WriteCommandAsync(19, true);
-    [RelayCommand] private async Task StopMachine()      => await _client.WriteCommandAsync(20, true);
-    [RelayCommand] private async Task EmergencyMachine() => await _client.WriteCommandAsync(21, true);
-    [RelayCommand] private async Task ResetMachine()     => await _client.WriteCommandAsync(22, true);
-    [RelayCommand] private async Task InjectData()       => await _client.WriteCommandAsync(23, true);
+    [RelayCommand] private async Task StartMachine()     => await _client.WriteCommandAsync(1031, true);
+    [RelayCommand] private async Task StopMachine()      => await _client.WriteCommandAsync(1032, true);
+    [RelayCommand] private async Task EmergencyMachine() => await _client.WriteCommandAsync(1033, true);
+    [RelayCommand] private async Task ResetMachine()     => await _client.WriteCommandAsync(1034, true);
+    [RelayCommand] private async Task InjectData()       => await _client.WriteCommandAsync(1035, true);
 }

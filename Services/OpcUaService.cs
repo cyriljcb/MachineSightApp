@@ -1,24 +1,63 @@
 ﻿using System;
-using System.Data.Common;
 using System.Threading;
 using System.Threading.Tasks;
-using Avalonia;
-using Avalonia.Vulkan;
 using MachineSightApp.Interfaces;
 using MachineSightApp.Models;
 using Opc.Ua;
 using Opc.Ua.Client;
+using Polly;
+using Polly.CircuitBreaker;
+using Polly.Retry;
+using Polly.Wrap;
 
 namespace MachineSightApp.Services;
 
 public class OpcUaService : IOpcUaService
 {
     private ISession? _session;
+    private string? _lastUrl;
     public event Action<MachineData>? DataReceived;
     private CancellationTokenSource _cts = new();
 
-   public async Task ConnectAsync(string url)
+    // ── Polly policies ──────────────────────────────────────────────────────
+    private readonly AsyncRetryPolicy _retryPolicy;
+    private readonly AsyncCircuitBreakerPolicy _circuitBreakerPolicy;
+    private readonly AsyncPolicyWrap _policy;
+
+    public OpcUaService()
     {
+        _retryPolicy = Policy
+            .Handle<Exception>(ex => ex is not OperationCanceledException)
+            .WaitAndRetryAsync(
+                retryCount: 5,
+                sleepDurationProvider: attempt =>
+                    TimeSpan.FromSeconds(Math.Pow(2, attempt)), // 2s, 4s, 8s, 16s, 32s
+                onRetry: (exception, delay, attempt, _) =>
+                    Console.WriteLine(
+                        $"[Polly] Retry {attempt}/5 dans {delay.TotalSeconds:F0}s — {exception.Message}"));
+
+        _circuitBreakerPolicy = Policy
+            .Handle<Exception>(ex => ex is not OperationCanceledException)
+            .CircuitBreakerAsync(
+                exceptionsAllowedBeforeBreaking: 3,
+                durationOfBreak: TimeSpan.FromSeconds(20),
+                onBreak: (ex, duration) =>
+                    Console.WriteLine(
+                        $"[Polly] Circuit OUVERT — serveur OPC UA indisponible, pause {duration.TotalSeconds}s"),
+                onReset: () =>
+                    Console.WriteLine("[Polly] Circuit FERMÉ — connexion OPC UA rétablie"),
+                onHalfOpen: () =>
+                    Console.WriteLine("[Polly] Circuit SEMI-OUVERT — tentative de reconnexion..."));
+
+        // Circuit breaker en outer, retry en inner
+        _policy = _circuitBreakerPolicy.WrapAsync(_retryPolicy);
+    }
+
+    // ── Connexion ───────────────────────────────────────────────────────────
+
+    public async Task ConnectAsync(string url)
+    {
+        _lastUrl = url; // mémorisé pour la reconnexion automatique
         try
         {
             var config = new ApplicationConfiguration()
@@ -69,17 +108,11 @@ public class OpcUaService : IOpcUaService
                     config.ApplicationName,
                     certId.SubjectName,
                     null
-                ).CreateForRSA().AddToStore(
-                    certId.StoreType,
-                    certId.StorePath
-                );
+                ).CreateForRSA().AddToStore(certId.StoreType, certId.StorePath);
                 Console.WriteLine("[OPC UA] Certificat généré.");
             }
 
-            config.CertificateValidator.CertificateValidation += (s, e) =>
-            {
-                e.Accept = true;
-            };
+            config.CertificateValidator.CertificateValidation += (s, e) => e.Accept = true;
 
             var endpoint = CoreClientUtils.SelectEndpoint(config, url, false);
             var endpointConfig = EndpointConfiguration.Create(config);
@@ -108,77 +141,114 @@ public class OpcUaService : IOpcUaService
     public async Task DisconnectAsync()
     {
         _cts.Cancel();
-        if(_session != null)
+        if (_session != null)
         {
             await _session.CloseAsync();
             _session.Dispose();
         }
     }
 
+    // ── Reconnexion automatique ─────────────────────────────────────────────
+
+    private async Task _ensureConnectedAsync()
+    {
+        if (_session != null && _session.Connected)
+            return;
+
+        if (_lastUrl == null)
+            throw new InvalidOperationException("ConnectAsync() n'a pas encore été appelé.");
+
+        Console.WriteLine("[OPC UA] Session perdue — tentative de reconnexion...");
+        await ConnectAsync(_lastUrl);
+    }
+
+    // ── Polling avec Polly ──────────────────────────────────────────────────
+
     public async Task StartPollingAsync()
     {
         CancellationToken token = _cts.Token;
+
         while (!token.IsCancellationRequested)
         {
             try
             {
-                if(_session == null || !_session.Connected)
+                var data = await _policy.ExecuteAsync(async () =>
                 {
-                    await Task.Delay(1000,token);
-                    continue;
-                }
-                T Read<T>(uint identifier)
-                {
-                    var nodeId = new NodeId(identifier, 2);
-                    var value = _session.ReadValue(nodeId);
-                    return (T)Convert.ChangeType(value.Value, typeof(T));
-                }
+                    await _ensureConnectedAsync();
 
-                var data = new MachineData
-                {
-                    Temperature     = Read<double>(3),
-                    Pressure        = Read<double>(4),
-                    Speed        = Read<double>(5),
-                    Vibration       = Read<double>(6),
-                    CurrentA        = Read<double>(7),
-                    ProductionCount = Read<int>(8),
-                    CycleTimeMs     = Read<double>(9),
-                    AlarmTemp       = Read<bool>(14),
-                    AlarmPressure   = Read<bool>(15),
-                    AlarmVibration  = Read<bool>(16),
-                    AlarmEmergency = Read<bool>(17),
-                    TimeStamp       = DateTime.Now
-                    
-                };
+                    try
+                    {
+                        T Read<T>(uint identifier)
+                        {
+                            var nodeId = new NodeId(identifier, 2);
+                            var value  = _session!.ReadValue(nodeId);
+                            return (T)Convert.ChangeType(value.Value, typeof(T));
+                        }
+
+                        return new MachineData
+                        {
+                            Temperature     = Read<double>(1002),
+                            Pressure        = Read<double>(1003),
+                            Speed           = Read<double>(1004),
+                            Vibration       = Read<double>(1005),
+                            CurrentA        = Read<double>(1006),
+                            ProductionCount = Read<int>   (1007),
+                            CycleTimeMs     = Read<double>(1008),
+                            AlarmTemp       = Read<bool>  (1021),
+                            AlarmPressure   = Read<bool>  (1022),
+                            AlarmVibration  = Read<bool>  (1023),
+                            AlarmEmergency  = Read<bool>  (1024),
+                            TimeStamp       = DateTime.Now
+                        };
+                    }
+                    catch (Exception)
+                    {
+                        Console.WriteLine("[DEBUG] Lecture échouée — session invalidée");
+                        _session = null;
+                        throw;
+                    }
+                });
+
                 DataReceived?.Invoke(data);
             }
-            catch(OperationCanceledException){}
+            catch (BrokenCircuitException)
+            {
+                await Task.Delay(5000, token);
+                continue;
+            }
+            catch (OperationCanceledException) { break; }
             catch (Exception ex)
             {
-                Console.WriteLine($"[OPC UA] Erreur polling: {ex.Message}");
-                await Task.Delay(2000, token);
+                
+                Console.WriteLine($"[OPC UA] Echec après retries: {ex.Message}");
+                await Task.Delay(5000, token);
+                continue; 
             }
 
             await Task.Delay(200, token);
         }
     }
 
+    // ── Écriture de commandes avec Polly ────────────────────────────────────
+
     public async Task WriteCommandAsync(uint nodeId, bool value)
     {
-         var nodesToWrite = new WriteValueCollection
+        await _policy.ExecuteAsync(async () =>
         {
-            new WriteValue
-            {
-                NodeId      = new NodeId(nodeId, 2),
-                AttributeId = Attributes.Value,
-                Value       = new DataValue(new Variant(value))
-            }
-        };
+            await _ensureConnectedAsync();
 
-        await _session.WriteAsync(
-            null,           // RequestHeader — null = défaut
-            nodesToWrite,
-            _cts.Token
-        );
+            var nodesToWrite = new WriteValueCollection
+            {
+                new WriteValue
+                {
+                    NodeId      = new NodeId(nodeId, 2),
+                    AttributeId = Attributes.Value,
+                    Value       = new DataValue(new Variant(value))
+                }
+            };
+
+            await _session!.WriteAsync(null, nodesToWrite, _cts.Token);
+        });
     }
+    public void SetUrl(string url) => _lastUrl = url;
 }
