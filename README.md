@@ -38,7 +38,7 @@ MachineSightApp.Tests/
 ```
 
 > **Diagramme d'architecture**  
-> ![Architecture serveur](docs/ArchiClient.jpg)
+> ![Architecture serveur](Docs/ArchiClient.jpg)
 
 ---
 
