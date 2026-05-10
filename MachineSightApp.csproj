@@ -8,6 +8,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <!-- ← Exclure le projet de tests -->
+    <Compile Remove="MachineSightApp.Tests\**" />
+    <None Remove="MachineSightApp.Tests\**" />
+    <EmbeddedResource Remove="MachineSightApp.Tests\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="Models\" />
     <AvaloniaResource Include="Assets\**" />
   </ItemGroup>
